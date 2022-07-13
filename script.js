@@ -19,10 +19,9 @@ class Producto {
 const productos = [];
 
 const usb = new Producto('usb', 'generico', '1.1', 100);
-const motherboard = new Producto('motherboard', 'Gigabyte', 'B450', 2000);
 const ssd = new Producto('ssd 512gb', 'Adata', '2.0', 900);
 const hdd = new Producto('ssd 1tb', 'seagate', '2.0', 800);
-productos.push(usb, motherboard, ssd,hdd);
+productos.push(usb, ssd,hdd);
 
 alert('Bienvenido a TecnoSoluciones');
 let nombre = prompt('Ingrese su nombre');
@@ -36,17 +35,6 @@ bienvenida.innerHTML = `<h2>Bienvenido a TecnoSoluciones</h2> <p>Es un placer ve
 bienvenida.className = 'titulo';
 console.log(bienvenida.innerHTML);
 
-/* let agregarProductos = parseInt(prompt('Desea agregar productos? \n1.Si\n2.No'));
-while(agregarProductos === 1) {
-    let nombreProducto = prompt('Ingrese el nombre del producto');
-    let marcaProducto = prompt('Ingrese la marca del producto');
-    let modeloProducto = prompt('Ingrese el modelo del producto');
-    let precioProducto = prompt('Ingrese el precio del producto');
-    let concatenar = new Producto(nombreProducto, marcaProducto, modeloProducto, precioProducto);
-    productos.push(concatenar);
-    agregarProductos = parseInt(prompt('Desea agregar productos? \n1.Si\n2.No'));
-}
- */
 const mostrarFormulario = () => {
     let contenedorInputs = document.getElementById('inputsProducto');
     contenedorInputs.innerHTML = `  <form id='formularioProducto'>
@@ -57,26 +45,68 @@ const mostrarFormulario = () => {
                                         <label for="modeloFormulario">Modelo</label>
                                         <input type='text' id='modeloFormulario' placeholder='Ingrese modelo'>      
                                         <label for="precioFormulario">Precio</label>
-                                        <input type='text' id='precioProducto' placeholder='Ingrese precio'>
+                                        <input type='number' id='precioFormulario' placeholder='Ingrese precio'>
 
                                         <input type="submit" id="enviarFormularioProducto" value="Agregar Producto">
                                     <form>`;
     let formularioProducto = document.getElementById('formularioProducto');
     formularioProducto.style.display = 'flex';
     formularioProducto.style.flexDirection = 'column';
-    formularioProducto.style.gap = '10px'
-}
-let botonProducto = document.getElementById('agregarProducto');
+    formularioProducto.style.gap = '10px';
 
-botonProducto.onclick = () => {
-    mostrarFormulario();        /* Se agrega evento cuando se le da click al boton */
+    /* Eventos del formulario */
+
+    formularioProducto.addEventListener("submit", (e) => {
+        e.preventDefault();
+        console.log("Se envio el formulario");
+        let valoresFormulario = e.target
+        console.log(valoresFormulario.children[1].value);   /* Se obtiene el valor del segundo hijo del formulario */
+        console.log(valoresFormulario.children[3].value);
+        console.log(valoresFormulario.children[5].value);
+        console.log(valoresFormulario.children[7].value);
+
+        let aniadirProducto = new Producto(valoresFormulario.children[1].value, valoresFormulario.children[3].value, valoresFormulario.children[5].value, valoresFormulario.children[7].value);
+        productos.push(aniadirProducto);
+    });
 }
+const agregarCardProducto = (marca,precio) => {     /* Funcion para agregar cards */
+    const mostrarProductos = document.getElementById('mostrarProductos');       /* Se obtiene la seccion del html */
+    let card = document.createElement('div');
+    card.className = 'card';
+    let divisionImagenCard = document.createElement('div');
+    divisionImagenCard.className = 'imagenProducto'
+    let imagenCard = document.createElement('h5');
+    imagenCard.innerText = 'Imagen de producto';
+    divisionImagenCard.append(imagenCard);
+    /* Espacio para hacer el append de la imagen al div imagenCard */
+    let contenidoCard = document.createElement('div');
+    contenidoCard.className = 'textoProductos';
+    let marcaContenidoCard = document.createElement('h5');
+    marcaContenidoCard.innerText = 'TecnoSoluciones';
+    let descripcionCard = document.createElement('p');
+    descripcionCard.innerText = marca;
+    let precioCard = document.createElement('p');
+    precioCard.innerText = precio;
+    contenidoCard.append(marcaContenidoCard,descripcionCard,precioCard);
+    card.append(divisionImagenCard, contenidoCard);
+    mostrarProductos.append(card);
+}
+const ocultarFormulario = () => {
+    return formularioProducto.style.display = "none";
+}
+
+/* Empieza interaccion con boton 1  */
+let botonProducto = document.getElementById('agregarProducto');     
+botonProducto.onclick = () => {
+    mostrarFormulario();        /* Se agrega formulario cuando se le da click al boton */
+}
+
+/* Empiezan eventos del boton 2 */
 
 let botonInventario = document.getElementById("consultarProductos");
-botonInventario.onclick = () => {
-    console.log('Se hizo click en el boton2');
-}
 botonInventario.addEventListener("click", () => {
-    console.log('Se hizo click en el boton 2 alv');
+    ocultarFormulario();
+    productos.forEach(element => {
+        agregarCardProducto(element._marca,element._precio);
+    });
 });
-
