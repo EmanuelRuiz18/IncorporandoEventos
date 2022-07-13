@@ -72,12 +72,11 @@ botonProducto.onclick = () => {
     mostrarFormulario();        /* Se agrega evento cuando se le da click al boton */
 }
 
-let formularioProducto = document.getElementById('formularioProducto');
-formularioProducto.addEventListener("submit", enviarFormulario); {
-    function enviarFormulario(e) {
-        e.preventDefault();
-        let formularioProducto = e.target;
-        console.log(formularioProducto.children[0].value);
-    }
+let botonInventario = document.getElementById("consultarProductos");
+botonInventario.onclick = () => {
+    console.log('Se hizo click en el boton2');
 }
+botonInventario.addEventListener("click", () => {
+    console.log('Se hizo click en el boton 2 alv');
+});
 
