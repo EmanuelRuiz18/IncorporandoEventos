@@ -23,18 +23,20 @@ const ssd = new Producto('ssd 512gb', 'Adata', '2.0', 900);
 const hdd = new Producto('ssd 1tb', 'seagate', '2.0', 800);
 productos.push(usb, ssd,hdd);
 
-alert('Bienvenido a TecnoSoluciones');
-let nombre = prompt('Ingrese su nombre');
-
-while ((nombre == '') & (nombre !== '')) {
-    nombre = prompt('Ingrese su nombre');
+const bienvenidaUsuario = () => {
+    alert('Bienvenido a TecnoSoluciones');
+    let nombre = prompt('Ingrese su nombre');
+    
+    while ((nombre == '') & (nombre !== '')) {
+        nombre = prompt('Ingrese su nombre');
+    }
+    
+    let bienvenida = document.getElementById('container');
+    bienvenida.innerHTML = `<h2>Bienvenido a TecnoSoluciones</h2> <p>Es un placer verte de nuevo, ${nombre}.</p>`;
+    bienvenida.className = 'titulo';
+    console.log(bienvenida.innerHTML);
+    localStorage.setItem('nombreUsuario', 1);   /* Se setea el nombre de usuario */
 }
-
-let bienvenida = document.getElementById('container');
-bienvenida.innerHTML = `<h2>Bienvenido a TecnoSoluciones</h2> <p>Es un placer verte de nuevo, ${nombre}.</p>`;
-bienvenida.className = 'titulo';
-console.log(bienvenida.innerHTML);
-
 const mostrarFormulario = () => {
     let contenedorInputs = document.getElementById('inputsProducto');
     contenedorInputs.innerHTML = `  <form id='formularioProducto'>
@@ -67,9 +69,10 @@ const mostrarFormulario = () => {
 
         let aniadirProducto = new Producto(valoresFormulario.children[1].value, valoresFormulario.children[3].value, valoresFormulario.children[5].value, valoresFormulario.children[7].value);
         productos.push(aniadirProducto);
+        ocultarFormulario();
     });
 }
-const agregarCardProducto = (marca,precio) => {     /* Funcion para agregar cards */
+const agregarCardProducto = (nombre,marca,modelo,precio) => {     /* Funcion para agregar cards */
     const mostrarProductos = document.getElementById('mostrarProductos');       /* Se obtiene la seccion del html */
     let card = document.createElement('div');
     card.className = 'card';
@@ -84,9 +87,10 @@ const agregarCardProducto = (marca,precio) => {     /* Funcion para agregar card
     let marcaContenidoCard = document.createElement('h5');
     marcaContenidoCard.innerText = 'TecnoSoluciones';
     let descripcionCard = document.createElement('p');
-    descripcionCard.innerText = marca;
+    descripcionCard.innerText = `${nombre}, ${marca}, Modelo: ${modelo}`;
+    descripcionCard.style.textAlign = 'center';
     let precioCard = document.createElement('p');
-    precioCard.innerText = precio;
+    precioCard.innerText = `$${precio}`;
     contenidoCard.append(marcaContenidoCard,descripcionCard,precioCard);
     card.append(divisionImagenCard, contenidoCard);
     mostrarProductos.append(card);
@@ -94,11 +98,28 @@ const agregarCardProducto = (marca,precio) => {     /* Funcion para agregar card
 const ocultarFormulario = () => {
     return formularioProducto.style.display = "none";
 }
+const botonCerrarSesion = () => {
+    let botonLogout = document.getElementById('botonLogout');
+    botonLogout.style.display = 'block';
+    botonLogout.addEventListener("click", ()=>{
+        console.log("Se hizo click en el boton.");
+        localStorage.clear();
+    })
+}
+
+botonLogout.style.display = 'none';
+let nombreUsuario = localStorage.getItem('nombreUsuario');
+if (nombreUsuario == null) {
+    bienvenidaUsuario();
+}
+botonCerrarSesion();
 
 /* Empieza interaccion con boton 1  */
 let botonProducto = document.getElementById('agregarProducto');     
 botonProducto.onclick = () => {
     mostrarFormulario();        /* Se agrega formulario cuando se le da click al boton */
+    mostrarProductos.innerHTML = "";
+    localStorage.setItem("productos", JSON.stringify(productos));
 }
 
 /* Empiezan eventos del boton 2 */
@@ -106,7 +127,19 @@ botonProducto.onclick = () => {
 let botonInventario = document.getElementById("consultarProductos");
 botonInventario.addEventListener("click", () => {
     ocultarFormulario();
+    mostrarProductos.innerHTML = "";
     productos.forEach(element => {
-        agregarCardProducto(element._marca,element._precio);
+        agregarCardProducto(element._nombre, element._marca,element._modelo, element._precio);
     });
 });
+let productosJson = localStorage.getItem('productos');  /* Guardamos en localStorage los productos del array */
+console.log(productosJson);     /* Se imprime en consola en formato JSON */
+
+const productosParseados = JSON.parse(productosJson);   /* Se parsea para obtener un array de objetos */
+console.log(productosParseados);    /* Se imprime */
+
+console.log(productosParseados[0]._precio);     /* Se trabaja como objeto */
+
+for (const iterator of productosParseados) {
+    console.log(productosParseados[iterator]._precio);      /* Se recorren precios de los objetos almacenados */
+}
