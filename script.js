@@ -1,5 +1,5 @@
 class Producto {
-    constructor(nombre, marca, modelo, precio, stock){
+    constructor(nombre, marca, modelo, precio){
         this._nombre = nombre;
         this._marca = marca;
         this._modelo = modelo;
@@ -27,7 +27,7 @@ const bienvenidaUsuario = () => {
     alert('Bienvenido a TecnoSoluciones');
     let nombre = prompt('Ingrese su nombre');
     
-    while ((nombre == '') & (nombre !== '')) {
+    while ((nombre == '') & (nombre !== NaN)) {
         nombre = prompt('Ingrese su nombre');
     }
     
@@ -70,6 +70,7 @@ const mostrarFormulario = () => {
         let aniadirProducto = new Producto(valoresFormulario.children[1].value, valoresFormulario.children[3].value, valoresFormulario.children[5].value, valoresFormulario.children[7].value);
         productos.push(aniadirProducto);
         ocultarFormulario();
+        alert('Producto agregado con exito')
     });
 }
 const agregarCardProducto = (nombre,marca,modelo,precio) => {     /* Funcion para agregar cards */
@@ -102,16 +103,14 @@ const botonCerrarSesion = () => {
     let botonLogout = document.getElementById('botonLogout');
     botonLogout.style.display = 'block';
     botonLogout.addEventListener("click", ()=>{
-        console.log("Se hizo click en el boton.");
         localStorage.clear();
     })
 }
 
 botonLogout.style.display = 'none';
 let nombreUsuario = localStorage.getItem('nombreUsuario');
-if (nombreUsuario == null) {
-    bienvenidaUsuario();
-}
+
+nombreUsuario == null? bienvenidaUsuario() : botonCerrarSesion();   /* Se usa operador ternario */
 botonCerrarSesion();
 
 /* Empieza interaccion con boton 1  */
@@ -132,14 +131,27 @@ botonInventario.addEventListener("click", () => {
         agregarCardProducto(element._nombre, element._marca,element._modelo, element._precio);
     });
 });
-let productosJson = localStorage.getItem('productos');  /* Guardamos en localStorage los productos del array */
-console.log(productosJson);     /* Se imprime en consola en formato JSON */
 
-const productosParseados = JSON.parse(productosJson);   /* Se parsea para obtener un array de objetos */
-console.log(productosParseados);    /* Se imprime */
+const {nombreProd, marcaProd, modeloProd, precioProd} = ssd;   /* desesctructuracion de producto */
+console.log(precioProd);
 
-console.log(productosParseados[0]._precio);     /* Se trabaja como objeto */
+let[a,,b] = productos;      /* Desestructuracion de array */
+console.log(a);
+console.log(b);
 
-for (const iterator of productosParseados) {
-    console.log(productosParseados[iterator]._precio);      /* Se recorren precios de los objetos almacenados */
+const Rangus = {
+    nombre: "Emanuel",
+    edad: 22
 }
+console.log(Rangus);
+
+const{nombre, edad} = Rangus;   /* Desestructuracion de un objeto */
+console.log(nombre);
+
+const Rangus2 = {
+    ...Rangus,
+    altura: 190,        /* Spread de objetos */
+    peso: 90 
+}
+
+console.log(Rangus2);
