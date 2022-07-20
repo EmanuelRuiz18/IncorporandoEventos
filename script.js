@@ -24,13 +24,16 @@ const hdd = new Producto('ssd 1tb', 'seagate', '2.0', 800);
 productos.push(usb, ssd,hdd);
 
 const bienvenidaUsuario = () => {
-    alert('Bienvenido a TecnoSoluciones');
     let nombre = prompt('Ingrese su nombre');
     
-    while ((nombre == '') & (nombre !== NaN)) {
+    while ((nombre == '') && (nombre !== NaN)) {
         nombre = prompt('Ingrese su nombre');
-    }
-    
+    }    
+    swal({
+        title: "Bienvenido a TecnoSoluciones!",
+        text: "Nos complace verte por aquí de nuevo",
+        icon: "info",
+      });
     let bienvenida = document.getElementById('container');
     bienvenida.innerHTML = `<h2>Bienvenido a TecnoSoluciones</h2> <p>Es un placer verte de nuevo, ${nombre}.</p>`;
     bienvenida.className = 'titulo';
@@ -70,13 +73,21 @@ const mostrarFormulario = () => {
         let aniadirProducto = new Producto(valoresFormulario.children[1].value, valoresFormulario.children[3].value, valoresFormulario.children[5].value, valoresFormulario.children[7].value);
         productos.push(aniadirProducto);
         ocultarFormulario();
-        alert('Producto agregado con exito')
-    });
+        Toastify({
+            text: "Producto agregado con exito",
+            offset: {
+              x: 50,
+              y: 10 
+            },
+            style: {
+                background: "orange",
+              }
+          }).showToast();    });
 }
 const agregarCardProducto = (nombre,marca,modelo,precio) => {     /* Funcion para agregar cards */
     const mostrarProductos = document.getElementById('mostrarProductos');       /* Se obtiene la seccion del html */
     let card = document.createElement('div');
-    card.className = 'card';
+    card.className = 'tarjeta';
     let divisionImagenCard = document.createElement('div');
     divisionImagenCard.className = 'imagenProducto'
     let imagenCard = document.createElement('h5');
@@ -131,27 +142,3 @@ botonInventario.addEventListener("click", () => {
         agregarCardProducto(element._nombre, element._marca,element._modelo, element._precio);
     });
 });
-
-const {nombreProd, marcaProd, modeloProd, precioProd} = ssd;   /* desesctructuracion de producto */
-console.log(precioProd);
-
-let[a,,b] = productos;      /* Desestructuracion de array */
-console.log(a);
-console.log(b);
-
-const Rangus = {
-    nombre: "Emanuel",
-    edad: 22
-}
-console.log(Rangus);
-
-const{nombre, edad} = Rangus;   /* Desestructuracion de un objeto */
-console.log(nombre);
-
-const Rangus2 = {
-    ...Rangus,
-    altura: 190,        /* Spread de objetos */
-    peso: 90 
-}
-
-console.log(Rangus2);
